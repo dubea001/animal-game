@@ -1,16 +1,27 @@
 import { useState } from 'react';
 
-const OrganizedTable = ({ data }) => {
+const OrganizedTable = ({ data, points, setPoints }) => {
     const [revealed, setRevealed] = useState({});
 
     const revealValue = (section, key) => {
-        setRevealed((prevState) => ({
-            ...prevState,
-            [section]: {
-                ...prevState[section],
-                [key]: true,
-            },
-        }));
+        if (
+            (section === 'characteristics' && points >= 2) ||
+            (section === 'taxonomy' && points >= 4)
+        ) {
+            setRevealed((prevState) => ({
+                ...prevState,
+                [section]: {
+                    ...prevState[section],
+                    [key]: true,
+                },
+            }));
+
+            if (section === 'characteristics') {
+                setPoints(points - 2);
+            } else if (section === 'taxonomy') {
+                setPoints(points - 4);
+            }
+        }
     };
 
     const renderTableSection = (sectionData, sectionName) => {
