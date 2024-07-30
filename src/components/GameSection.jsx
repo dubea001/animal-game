@@ -12,6 +12,9 @@ const GameSection = () => {
     const [message, setMessage] = useState('');
     const [timeLeft, setTimeLeft] = useState(1200);
     const [gameStarted, setGameStarted] = useState(true);
+    const [isInputDisabled, setIsInputDisabled] = useState(false);
+    const [showNextButton, setShowNextButton] = useState(false);
+    const [error, setError] = useState(null);
 
     useEffect(() => {
         if (gameStarted && timeLeft > 0) {
@@ -42,9 +45,11 @@ const GameSection = () => {
                 setPoints(20);
                 setSelectedOption(null);
                 setMessage('');
+                setAnimalName('');
+                setIsInputDisabled(true);
             }
         } catch (error) {
-            console.error('failed to fetch data. please try again', error);
+            setError('Request failed. please try again', error);
         }
     };
 
@@ -95,6 +100,19 @@ const GameSection = () => {
             setMessage(`Incorrect the correct answer is ${animalsData.name}`);
         }
         setSelectedOption(option);
+        setIsInputDisabled(true);
+        setShowNextButton(true);
+    };
+
+    const handleNext = () => {
+        setAnimalName('');
+        setAnimalsData(null);
+        setOptions([]);
+        setPoints(20);
+        setSelectedOption(null);
+        setMessage('');
+        setIsInputDisabled(false);
+        setShowNextButton(false);
     };
 
     const handleRestart = () => {
@@ -107,6 +125,8 @@ const GameSection = () => {
         setPoints(20);
         setSelectedOption(null);
         setMessage('');
+        setIsInputDisabled(false);
+        setShowNextButton(false);
     };
 
     const handleQuit = () => {
@@ -125,28 +145,64 @@ const GameSection = () => {
     }
 
     return (
-        <div>
-            <div className=''>
-                <h3 className=''>Timer: {formatTime(timeLeft)}</h3>
-                <h3 className=''>Score: {points}</h3>
+        <div className='border border-gray-700 md:w-1/2 mx-auto font-mono'>
+            <div className='flex text-white justify-between items-center mx-auto px-4 py-6 bg-gray-700'>
+                <h3 className=' py-2 text-lg'>
+                    Time Remaining: {formatTime(timeLeft)}
+                </h3>
+
+                <h3 className='py-2 text-lg'>Total Score: {totalScore}</h3>
             </div>
-            <div className=''>
+            <div className='my-6 flex justify-between px-4'>
                 <input
                     type='text'
-                    className='px-6 py-2 border border-black mr-8'
+                    className='px-6 py-2 border border-gray-700 w-[70%] md:w-[80%] outline-0 focus:border focus:border-gray-700'
                     autoFocus
                     placeholder='Enter animal name'
+                    value={animalName}
                     onChange={(e) => setAnimalName(e.target.value)}
+                    disabled={isInputDisabled}
                 />
                 <button
-                    className='bg-blue-500 px-6 py-2 hover:bg-blue-700'
+                    className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-6 py-2 transition-all duration-200'
                     onClick={getAnimalsData}
+                    disabled={isInputDisabled}
                 >
                     search
                 </button>
             </div>
 
-            <div className=''>Total Score: {totalScore}</div>
+            <div className='my-4 flex flex-col md:flex-row md:flex-wrap md:gap-x-8 md:items-center md:justify-center px-4'>
+                {options.map((option, index) => (
+                    <p
+                        key={index}
+                        onClick={() => handleAnswer(option)}
+                        className={`cursor-pointer my-4 py-2 md:w-full border pl-4 border-gray-700 ${
+                            selectedOption === option
+                                ? 'bg-gray-200'
+                                : 'hover:bg-gray-100'
+                        }`}
+                        style={{
+                            pointerEvents:
+                                selectedOption !== null ? 'none' : 'auto',
+                        }}
+                    >
+                        {addAlphabetToOptions(index)} {option}
+                    </p>
+                ))}
+            </div>
+            {message && <div className='text-center text-lg'>{message}</div>}
+
+            <div className='flex items-center justify-center my-8'>
+                {showNextButton && (
+                    <button
+                        onClick={handleNext}
+                        className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-8 py-2 transition-all duration-200'
+                    >
+                        Continue
+                    </button>
+                )}
+            </div>
 
             {animalsData && (
                 <OrganizedTable
@@ -155,23 +211,6 @@ const GameSection = () => {
                     setPoints={setPoints}
                 />
             )}
-            <div className=''>
-                {options.map((option, index) => (
-                    <p
-                        key={index}
-                        onClick={() => handleAnswer(option)}
-                        className={`${
-                            selectedOption === option
-                                ? 'bg-gray-200'
-                                : 'hover:bg-gray-100'
-                        }`}
-                    >
-                        {addAlphabetToOptions(index)} {option}
-                    </p>
-                ))}
-            </div>
-
-            {message && <div>{message}</div>}
         </div>
     );
 };
