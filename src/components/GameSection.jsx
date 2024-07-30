@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { fetchData } from '../../Utils/fetchApi';
 import OrganizedTable from './OrganizedTable';
+import ClipLoader from 'react-spinners/ClipLoader';
 
 const GameSection = () => {
     const [animalName, setAnimalName] = useState('');
@@ -14,6 +15,8 @@ const GameSection = () => {
     const [gameStarted, setGameStarted] = useState(true);
     const [isInputDisabled, setIsInputDisabled] = useState(false);
     const [showNextButton, setShowNextButton] = useState(false);
+    const [correctAnswer, setCorrectAnswer] = useState(null);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
@@ -31,6 +34,7 @@ const GameSection = () => {
 
     const getAnimalsData = async () => {
         try {
+            setLoading(true);
             const result = await fetchData(animalName);
             if (result && result.length > 0) {
                 const selectedAnimal = result[generateRandomNumber(result)];
@@ -50,6 +54,8 @@ const GameSection = () => {
             }
         } catch (error) {
             setError('Request failed. please try again', error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -87,9 +93,14 @@ const GameSection = () => {
     const formatTime = (seconds) => {
         const minutes = Math.floor(seconds / 60);
         const remainingSeconds = seconds % 60;
-        return `${minutes}:${
-            remainingSeconds < 10 ? '0' : ''
-        } ${remainingSeconds}`;
+
+        const formattedMinutes = String(minutes).padStart(2, '0');
+        const formattedSeconds = String(remainingSeconds).padStart(2, '0');
+
+        return `${formattedMinutes}:${formattedSeconds}`;
+        // return `${minutes}:${
+        //     remainingSeconds < 10 ? '0' : ''
+        // } ${remainingSeconds}`;
     };
 
     const handleAnswer = (option) => {
@@ -102,6 +113,7 @@ const GameSection = () => {
         setSelectedOption(option);
         setIsInputDisabled(true);
         setShowNextButton(true);
+        setCorrectAnswer(animalsData.name);
     };
 
     const handleNext = () => {
@@ -113,6 +125,7 @@ const GameSection = () => {
         setMessage('');
         setIsInputDisabled(false);
         setShowNextButton(false);
+        setCorrectAnswer(null);
     };
 
     const handleRestart = () => {
@@ -144,6 +157,10 @@ const GameSection = () => {
         );
     }
 
+    if (error) {
+        return <div className=''>{error}</div>;
+    }
+
     return (
         <div className='border border-gray-700 md:w-1/2 mx-auto font-mono'>
             <div className='flex text-white justify-between items-center mx-auto px-4 py-6 bg-gray-700'>
@@ -171,15 +188,23 @@ const GameSection = () => {
                     search
                 </button>
             </div>
-
+            <div className='flex items-center justify-center'>
+                {loading && <ClipLoader color='#374151' />}
+            </div>
             <div className='my-4 flex flex-col md:flex-row md:flex-wrap md:gap-x-8 md:items-center md:justify-center px-4'>
                 {options.map((option, index) => (
                     <p
                         key={index}
                         onClick={() => handleAnswer(option)}
                         className={`cursor-pointer my-4 py-2 md:w-full border pl-4 border-gray-700 ${
-                            selectedOption === option
+                            selectedOption === option &&
+                            option === animalsData.name
+                                ? 'bg-green-300'
+                                : selectedOption === option
                                 ? 'bg-gray-200'
+                                : selectedOption !== null &&
+                                  option === animalsData.name
+                                ? 'bg-green-300'
                                 : 'hover:bg-gray-100'
                         }`}
                         style={{
@@ -191,7 +216,7 @@ const GameSection = () => {
                     </p>
                 ))}
             </div>
-            {message && <div className='text-center text-lg'>{message}</div>}
+            {/* {message && <div className='text-center text-lg'>{message}</div>} */}
 
             <div className='flex items-center justify-center my-8'>
                 {showNextButton && (

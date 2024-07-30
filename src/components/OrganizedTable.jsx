@@ -80,6 +80,7 @@ const OrganizedTable = ({ data, points, setPoints }) => {
                     the available points. taxonomy reduce 4 points while
                     characteristics reduce 2 points
                 </p>
+                <div className='mt-8 font-semibold'>points: {points}</div>
             </div>
             {Object.keys(filteredData).map((sectionName) =>
                 renderTableSection(filteredData[sectionName], sectionName)
