@@ -2,12 +2,15 @@ import { Link } from 'react-router-dom';
 
 const StartGame = () => {
     return (
-        <div className='font-mono py-8 md:w-1/2 mx-auto flex flex-col items-center justify-center mb-8'>
-            <h2 className='font-bold text-2xl md:text-4xl '>
-                Welcome to the Animal Quiz Game!
+        <div className='font-mono py-8 md:w-[80%] mx-auto flex flex-col items-center justify-center mb-8'>
+            <h2 className='font-bold text-2xl md:text-4xl lg:text-6xl text-center'>
+                Welcome to the <br />
+                Animal Quiz Game!
             </h2>
-            <p className=' text-xl my-4 font-semibold'>How the game works:</p>
-            <ul className='mb-8 px-4 list-disc list-inside'>
+            <p className='text-xl my-4 font-semibold md:text-2xl lg:text-4xl'>
+                How the game works:
+            </p>
+            <ul className='mb-8 px-4 list-disc mx-4 md:text-lg lg:text-2xl'>
                 <li className='my-4'>
                     When you click "Start Game", you will be taken to the game
                     page.
@@ -55,8 +58,10 @@ const StartGame = () => {
                     of the game.
                 </li>
             </ul>
-            <p className=' text-xl my-4 font-semibold'>Game Rules:</p>
-            <ul className='mb-8 px-4 list-disc list-inside'>
+            <p className=' text-xl my-4 font-semibold md:text-2xl lg:text-4xl'>
+                Game Rules:
+            </p>
+            <ul className='mb-8 px-4 list-disc mx-4 md:text-lg lg:text-2xl'>
                 <li className='my-4'>
                     Enter an animal name in the input box and click "Search" to
                     start each question.
@@ -95,7 +100,7 @@ const StartGame = () => {
             </ul>
             <Link
                 to='/gamesection'
-                className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-8 py-2 transition-all duration-200'
+                className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-8 py-2 transition-all duration-200 md:px-12 md:py-4'
             >
                 Start Game
             </Link>

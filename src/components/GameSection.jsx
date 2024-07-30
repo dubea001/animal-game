@@ -182,18 +182,20 @@ const GameSection = () => {
     }
 
     return (
-        <div className='border border-gray-700 md:w-1/2 mx-auto font-mono'>
+        <div className='md:w-[80%] mx-auto font-mono'>
             <div className='flex text-white justify-between items-center mx-auto px-4 py-6 bg-gray-700'>
-                <h3 className=' py-2 text-lg'>
-                    Time Remaining: {formatTime(timeLeft)}
+                <h3 className=' py-2 text-lg md:text-xl lg:text-2xl'>
+                    Time Left: <br /> {formatTime(timeLeft)}
                 </h3>
 
-                <h3 className='py-2 text-lg'>Total Score: {totalScore}</h3>
+                <h3 className='py-2 text-lg md:text-xl lg:text-2xl'>
+                    Total Score: <br /> {totalScore}
+                </h3>
             </div>
-            <div className='my-6 flex justify-between px-4'>
+            <div className='my-6 flex justify-center gap-x-4 px-4'>
                 <input
                     type='text'
-                    className='px-6 py-2 border border-gray-700 w-[70%] md:w-[80%] outline-0 focus:border focus:border-gray-700'
+                    className='px-6 py-2 md:py-4 md:px-10 border border-gray-700  outline-0 focus:border focus:border-gray-700'
                     autoFocus
                     placeholder='Enter animal name'
                     value={animalName}
@@ -214,14 +216,13 @@ const GameSection = () => {
             </div>
             <div className='flex items-center justify-center'>
                 {loading && <ClipLoader color='#374151' />}
-                {error && <div className='text-red-500'>{error}</div>}
             </div>
             <div className='my-4 flex flex-col md:flex-row md:flex-wrap md:gap-x-8 md:items-center md:justify-center px-4'>
                 {options.map((option, index) => (
                     <p
                         key={index}
                         onClick={() => handleAnswer(option)}
-                        className={`cursor-pointer my-4 py-2 md:w-full border pl-4 border-gray-700 ${
+                        className={`cursor-pointer my-4 py-2 md:py-4 md:text-xl md:w-full border pl-4 border-gray-700 ${
                             selectedOption === option &&
                             option === animalsData.name
                                 ? 'bg-green-300'
@@ -241,13 +242,17 @@ const GameSection = () => {
                     </p>
                 ))}
             </div>
-            {message && <div className='text-center text-lg'>{message}</div>}
+            {message && (
+                <div className='px-4 text-base md:text-xl lg:text-2xl'>
+                    {message}
+                </div>
+            )}
 
             <div className='flex items-center justify-center my-8'>
                 {showNextButton && (
                     <button
                         onClick={handleNext}
-                        className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-8 py-2 transition-all duration-200'
+                        className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-8 py-2 transition-all duration-200 md:py-4 md:px-12 md:text-lg'
                     >
                         Continue
                     </button>

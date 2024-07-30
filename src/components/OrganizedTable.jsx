@@ -32,10 +32,10 @@ const OrganizedTable = ({ data, points, setPoints }) => {
             >
                 <thead className='text-white bg-gray-700'>
                     <tr className='border-b border-black'>
-                        <th className='text-start py-2 w-[40%] pl-2'>
+                        <th className='text-start py-2 w-[40%] pl-2 md:text-xl'>
                             {sectionName}
                         </th>
-                        <th className='text-start border-l border-black pl-2 py-2'>
+                        <th className='text-start border-l border-black pl-2 py-2 md:text-xl'>
                             Property
                         </th>
                     </tr>
@@ -43,8 +43,10 @@ const OrganizedTable = ({ data, points, setPoints }) => {
                 <tbody className=''>
                     {Object.keys(sectionData).map((key) => (
                         <tr key={key} className=' border border-gray-700'>
-                            <td className='pl-2'>{key}</td>
-                            <td className='border-l border-gray-700 pl-2 py-2 '>
+                            <td className='pl-2 text-sm md:text-xl lg:text-2xl'>
+                                {key}
+                            </td>
+                            <td className='border-l border-gray-700 pl-2 py-2 text-sm md:text-xl lg:text-2xl'>
                                 {revealed[sectionName] &&
                                 revealed[sectionName][key] ? (
                                     sectionData[key]
@@ -73,14 +75,18 @@ const OrganizedTable = ({ data, points, setPoints }) => {
 
     return (
         <div className='px-4'>
-            <div className='text-center'>
-                <div className='font-bold text-xl mb-2'>Use Hints</div>
-                <p className='text-sm'>
+            <div className=''>
+                <div className='font-bold text-xl mb-2 md:text-2xl'>
+                    Use Hints
+                </div>
+                <p className='text-base md:text-xl'>
                     Each question starts with 20 points. Using hints will reduce
                     the available points. taxonomy reduce 4 points while
                     characteristics reduce 2 points
                 </p>
-                <div className='mt-8 font-semibold'>points: {points}</div>
+                <div className='mt-8 font-semibold md:text-xl'>
+                    points: {points}
+                </div>
             </div>
             {Object.keys(filteredData).map((sectionName) =>
                 renderTableSection(filteredData[sectionName], sectionName)
