@@ -29,6 +29,15 @@ const StartGame = () => {
                     reveal more characteristics or taxonomy details.
                 </li>
                 <li className='my-4'>
+                    If you don't have a specific animal in mind, you can type
+                    any random letter or multiple letters, and a random animal
+                    will be selected for you to guess. <br />
+                    <span className='font-semibold'>
+                        For example, typing "a" or "xyz" will return a random
+                        animal
+                    </span>
+                </li>
+                <li className='my-4'>
                     Each question starts with 20 points. Using hints will reduce
                     the available points.
                 </li>
@@ -79,6 +88,9 @@ const StartGame = () => {
                 <li className='my-4'>
                     Your total score will be calculated and displayed when the
                     time runs out or when you finish all questions.
+                </li>
+                <li className='my-4 font-semibold'>
+                    Have fun and learn about different animals!
                 </li>
             </ul>
             <Link

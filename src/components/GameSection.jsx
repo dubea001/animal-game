@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../../Utils/fetchApi';
 import OrganizedTable from './OrganizedTable';
 import ClipLoader from 'react-spinners/ClipLoader';
@@ -11,13 +12,15 @@ const GameSection = () => {
     const [totalScore, setTotalScore] = useState(0);
     const [selectedOption, setSelectedOption] = useState(null);
     const [message, setMessage] = useState('');
-    const [timeLeft, setTimeLeft] = useState(1200);
+    const [timeLeft, setTimeLeft] = useState(600);
     const [gameStarted, setGameStarted] = useState(true);
     const [isInputDisabled, setIsInputDisabled] = useState(false);
     const [showNextButton, setShowNextButton] = useState(false);
     const [correctAnswer, setCorrectAnswer] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (gameStarted && timeLeft > 0) {
@@ -38,7 +41,6 @@ const GameSection = () => {
             const result = await fetchData(animalName);
             if (result && result.length > 0) {
                 const selectedAnimal = result[generateRandomNumber(result)];
-                console.log(selectedAnimal);
                 setAnimalsData(selectedAnimal);
                 const incorrectOptions = fetchIncorrectOptions(result);
                 const optionsToSelect = [
@@ -98,9 +100,6 @@ const GameSection = () => {
         const formattedSeconds = String(remainingSeconds).padStart(2, '0');
 
         return `${formattedMinutes}:${formattedSeconds}`;
-        // return `${minutes}:${
-        //     remainingSeconds < 10 ? '0' : ''
-        // } ${remainingSeconds}`;
     };
 
     const handleAnswer = (option) => {
@@ -130,7 +129,7 @@ const GameSection = () => {
 
     const handleRestart = () => {
         setTotalScore(0);
-        setTimeLeft(1200);
+        setTimeLeft(600);
         setGameStarted(true);
         setAnimalName('');
         setAnimalsData(null);
@@ -143,22 +142,43 @@ const GameSection = () => {
     };
 
     const handleQuit = () => {
-        // IMPLEMENT QUIT GAME LOGIC
+        setTotalScore(0);
+        setTimeLeft(600);
+        setGameStarted(false);
+        setAnimalName('');
+        setAnimalsData(null);
+        setOptions([]);
+        setPoints(20);
+        setSelectedOption(null);
+        setMessage('');
+        setIsInputDisabled(false);
+        setShowNextButton(false);
+        navigate('/');
     };
 
     if (timeLeft === 0) {
         return (
-            <div className=''>
-                <h2 className=''>Game Over</h2>
-                <p className=''>Your total score is: {totalScore}</p>
-                <button onClick={handleRestart}>Restart Game</button>
-                <button onClick={handleQuit}>Quit</button>
+            <div className='border border-red-600 h-screen flex flex-col items-center justify-center font-mono'>
+                <h2 className=' text-4xl font-bold mb-4'>Game Over</h2>
+                <p className='text-2xl mb-4'>
+                    Your total score is: {totalScore}
+                </p>
+                <div className='flex gap-x-8'>
+                    <button
+                        onClick={handleRestart}
+                        className='bg-gray-700 text-white px-6 py-2 font-semibold hover:bg-gray-900 transition-all duration-200'
+                    >
+                        Restart
+                    </button>
+                    <button
+                        onClick={handleQuit}
+                        className='px-6 py-2 font-semibold text-white bg-red-500 hover:bg-red-700 transition-all duration-200'
+                    >
+                        Quit
+                    </button>
+                </div>
             </div>
         );
-    }
-
-    if (error) {
-        return <div className=''>{error}</div>;
     }
 
     return (
@@ -181,15 +201,20 @@ const GameSection = () => {
                     disabled={isInputDisabled}
                 />
                 <button
-                    className='bg-gray-700 hover:shadow-[-3px_3px_0px_#374151] text-white hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 px-6 py-2 transition-all duration-200'
+                    className={`bg-gray-700 text-white px-6 py-2 transition-all duration-200 ${
+                        !animalName
+                            ? 'opacity-50 cursor-not-allowed '
+                            : 'hover:shadow-[-3px_3px_0px_#374151] hover:text-gray-700 hover:bg-transparent hover:border hover:border-t hover:border-gray-700 '
+                    }`}
                     onClick={getAnimalsData}
-                    disabled={isInputDisabled}
+                    disabled={isInputDisabled || !animalName}
                 >
                     search
                 </button>
             </div>
             <div className='flex items-center justify-center'>
                 {loading && <ClipLoader color='#374151' />}
+                {error && <div className='text-red-500'>{error}</div>}
             </div>
             <div className='my-4 flex flex-col md:flex-row md:flex-wrap md:gap-x-8 md:items-center md:justify-center px-4'>
                 {options.map((option, index) => (
@@ -216,7 +241,7 @@ const GameSection = () => {
                     </p>
                 ))}
             </div>
-            {/* {message && <div className='text-center text-lg'>{message}</div>} */}
+            {message && <div className='text-center text-lg'>{message}</div>}
 
             <div className='flex items-center justify-center my-8'>
                 {showNextButton && (
